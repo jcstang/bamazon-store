@@ -21,7 +21,9 @@ let arrOfData2 = [];
 
 function goGetData() {
 
-  connection.query("SELECT * FROM products", function(err, res) {
+  let queryString = "SELECT item_id, product_name, department_name, price, stock_quantity FROM bamazon.products;"
+
+  connection.query(queryString, function(err, res) {
     if (err) {
       throw err;
     }
