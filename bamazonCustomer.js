@@ -25,27 +25,9 @@ function goGetData() {
     if (err) {
       throw err;
     }
-    arrOfData = res;
-    // console.log(res);
 
-    // for (const iterator of res) {
-    //   arrOfData.push(iterator);
-    // }
-    // console.log('-----');
-    // console.log(arrOfData);
-    // res.forEach(element => {
-    //   arrOfData.push(element);
-    // });
-    // console.log(`item_id\tproduct_name\t\t\tdept_name\tprice\tstock`);
-
-    printTable(arrOfData);
+    printTable(res);
     
-    arrOfData.forEach(element => {
-      // console.log(`item_id: ${element.item_id} product_name: ${element.product_name} dept name: ${element.department_name} price: ${element.price} stock: ${element.stock_quantity}`);
-      // console.log(`${element.item_id}\t\t${element.product_name}\t\t\t\t${element.department_name}\t${element.price}\t${element.stock_quantity}`);
-    });
-    
-
     connection.end();
   });
 
