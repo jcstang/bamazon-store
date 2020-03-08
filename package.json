@@ -1,0 +1,27 @@
+{
+  "name": "bamazon-store",
+  "version": "1.0.0",
+  "description": "Like Amazon. Node app with products.",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jcstang/bamazon-store.git"
+  },
+  "keywords": [
+    "node"
+  ],
+  "author": "Jacob Stanger",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jcstang/bamazon-store/issues"
+  },
+  "homepage": "https://github.com/jcstang/bamazon-store#readme",
+  "dependencies": {
+    "chalk": "^3.0.0",
+    "inquirer": "^7.0.6",
+    "mysql": "^2.18.1"
+  }
+}
