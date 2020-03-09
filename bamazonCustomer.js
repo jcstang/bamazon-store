@@ -15,37 +15,48 @@ connection.connect(function(err) {
   goGetData();
 });
 
-let arrOfData = [];
-let arrOfData2 = [];
+// let arrOfData = [];
+// let arrOfData2 = [];
+function promptBuyer() {
+  inquirer.prompt([
+    {
+      type: 'number',
+      name: 'product_id',
+      message: 'What product ID would you like?'
+    },
+    {
+      type: 'number',
+      name: 'product_quantity',
+      message: 'how much do you want?'
+    }
+  ])
+      .then((answers) => {
+        // console.log(answers);
+        getRecordFromKey(answers.product_id);
 
+      }).catch(error => {
+
+  });
+
+
+}
+
+function getRecordFromKey(key) {
+  console.log('some product');
+  
+}
 
 function goGetData() {
+  let queryString = "SELECT item_id, product_name, department_name, price, stock_quantity FROM bamazon.products;"
 
-  connection.query("SELECT * FROM products", function(err, res) {
+  connection.query(queryString, function(err, res) {
     if (err) {
       throw err;
     }
-    arrOfData = res;
-    // console.log(res);
 
-    // for (const iterator of res) {
-    //   arrOfData.push(iterator);
-    // }
-    // console.log('-----');
-    // console.log(arrOfData);
-    // res.forEach(element => {
-    //   arrOfData.push(element);
-    // });
-    // console.log(`item_id\tproduct_name\t\t\tdept_name\tprice\tstock`);
-
-    printTable(arrOfData);
+    printTable(res);
+    promptBuyer();
     
-    arrOfData.forEach(element => {
-      // console.log(`item_id: ${element.item_id} product_name: ${element.product_name} dept name: ${element.department_name} price: ${element.price} stock: ${element.stock_quantity}`);
-      // console.log(`${element.item_id}\t\t${element.product_name}\t\t\t\t${element.department_name}\t${element.price}\t${element.stock_quantity}`);
-    });
-    
-
     connection.end();
   });
 
