@@ -31,19 +31,60 @@ function promptBuyer() {
     }
   ])
       .then((answers) => {
-        // console.log(answers);
         getRecordFromKey(answers.product_id);
+        doesProductHaveEnough(answers.product_id, answers.product_quantity);
 
       }).catch(error => {
-
-  });
+        console.log(error);
+        
+      });
 
 
 }
 
 function getRecordFromKey(key) {
-  console.log('some product');
   
+  let queryString = `SELECT item_id, product_name, stock_quantity FROM bamazon.products WHERE item_id=${key};`;
+  // console.log(queryString);
+  
+  connection.query(queryString, function(err, data) {
+    if (err) {
+      throw err;
+    }
+    // console.log(data);
+    printTable(data);
+    // process.exit(0);
+    // return data;
+
+  });
+  
+}
+
+function doesProductHaveEnough(key, quantity) {
+  console.log('start of doesProductHaveEnough');
+  
+  let queryString = `SELECT item_id, product_name, stock_quantity FROM bamazon.products WHERE item_id=${key};`;
+  // console.log(queryString);
+  
+  connection.query(queryString, function(err, data) {
+    if (err) {
+      throw err;
+    }
+
+    console.log(data);
+    console.log(data[0].stock_quantity);
+    
+    if(quantity > data[0].stock_quantity) {
+      console.log(chalk.red('there is not enough!!!!!!!!!!!!!!'));
+      process.exit(1); 
+    }
+    // console.log(data);
+    // printTable(data);
+    // process.exit(0);
+    // return data;
+
+    console.log('end of doesProductHaveEnough');
+  });
 }
 
 function goGetData() {
@@ -57,7 +98,7 @@ function goGetData() {
     printTable(res);
     promptBuyer();
     
-    connection.end();
+    // connection.end();
   });
 
 }
@@ -72,3 +113,12 @@ function printTable(arr) {
   });
   
 }
+
+
+// ===================================================
+// on exit
+// ===================================================
+process.on('exit', (code) => {
+  console.log(`About to exit with code: ${code}`);
+  connection.end();
+});
