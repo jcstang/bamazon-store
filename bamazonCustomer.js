@@ -20,18 +20,20 @@ connection.connect(function(err) {
 function promptBuyer() {
   inquirer.prompt([
     {
-      type: 'input',
-      name: 'productId',
+      type: 'number',
+      name: 'product_id',
       message: 'What product ID would you like?'
     },
     {
       type: 'number',
-      name: 'quantityProd',
+      name: 'product_quantity',
       message: 'how much do you want?'
     }
   ])
       .then((answers) => {
-        console.log(answers);
+        // console.log(answers);
+        getRecordFromKey(answers.product_id);
+
       }).catch(error => {
 
   });
@@ -39,8 +41,12 @@ function promptBuyer() {
 
 }
 
-function goGetData() {
+function getRecordFromKey(key) {
+  console.log('some product');
+  
+}
 
+function goGetData() {
   let queryString = "SELECT item_id, product_name, department_name, price, stock_quantity FROM bamazon.products;"
 
   connection.query(queryString, function(err, res) {
@@ -49,6 +55,7 @@ function goGetData() {
     }
 
     printTable(res);
+    promptBuyer();
     
     connection.end();
   });
