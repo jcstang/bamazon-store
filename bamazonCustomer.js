@@ -15,9 +15,29 @@ connection.connect(function(err) {
   goGetData();
 });
 
-let arrOfData = [];
-let arrOfData2 = [];
+// let arrOfData = [];
+// let arrOfData2 = [];
+function promptBuyer() {
+  inquirer.prompt([
+    {
+      type: 'input',
+      name: 'productId',
+      message: 'What product ID would you like?'
+    },
+    {
+      type: 'number',
+      name: 'quantityProd',
+      message: 'how much do you want?'
+    }
+  ])
+      .then((answers) => {
+        console.log(answers);
+      }).catch(error => {
 
+  });
+
+
+}
 
 function goGetData() {
 
