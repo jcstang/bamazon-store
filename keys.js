@@ -1,4 +1,4 @@
-console.log('keys file loaded');
+console.log('DB credentials loaded');
 
 // what is the difference between:
 // this (in instructions)
