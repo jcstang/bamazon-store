@@ -24,13 +24,24 @@ let pool  = mysql.createPool({
   database        : 'bamazon'
 });
 
-pool.query('SELECT', function (error, results, fields) {
-  if (error) {
-    throw error;
-  }
-
-  console.log('The solution is: ', results[0].solution);
-});
+// pool.query('SELECT * FROM bamazon.products', function (error, results, fields) {
+//   if (error) {
+//     throw error;
+//   }
+//   console.log('the thing is: ', results);
+  
+//   // console.log('The solution is: ', results[0].solution);
+// });
+function fulfillOrder(key, qty) {
+  pool.query(`SELECT stock_quantity FROM bamazon.products WHERE item_id=${key}`, function(error, results, fields) {
+    if (error) {
+      throw error;
+    }
+    console.log('the thing is: ', results);
+    
+  });
+  
+}
 
 // let arrOfData = [];
 // let arrOfData2 = [];
@@ -95,6 +106,7 @@ function doesProductHaveEnough(key, quantity) {
       console.log(chalk.red('there is not enough!!!!!!!!!!!!!!'));
       process.exit(1); 
     }
+    fulfillOrder(data[0].item_id, data[0].stock_quantity);
     // console.log(data);
     // printTable(data);
     // process.exit(0);
@@ -131,9 +143,6 @@ function printTable(arr) {
   
 }
 
-function fulfillOrder(key, qty) {
-
-}
 
 
 // ===================================================
