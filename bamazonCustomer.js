@@ -1,6 +1,16 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql');
 const chalk = require('chalk');
+const figlet = require('figlet');
+
+
+figlet('Welcome to bamazon!', function(err, data) {
+  if (err) {
+    throw err;
+  }
+  console.log(data);
+  
+});
 
 let connection = mysql.createConnection({
   host: "localhost",
