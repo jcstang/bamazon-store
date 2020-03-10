@@ -2,6 +2,7 @@ const inquirer = require('inquirer');
 const mysql = require('mysql');
 const chalk = require('chalk');
 const figlet = require('figlet');
+const keys = require('./keys');
 
 
 figlet('Welcome to bamazon!', function(err, data) {
@@ -13,10 +14,10 @@ figlet('Welcome to bamazon!', function(err, data) {
 });
 
 let connection = mysql.createConnection({
-  host: "localhost",
+  host: keys.creds.hostName,
   port: 8889,
-  user: "root",
-  password: "root",
+  user: keys.creds.userName,
+  password: keys.creds.password,
   database: "bamazon"
 });
 connection.connect(function(err) {
