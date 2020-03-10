@@ -15,6 +15,23 @@ connection.connect(function(err) {
   goGetData();
 });
 
+let pool  = mysql.createPool({
+  connectionLimit : 10,
+  host            : 'localhost',
+  port            : 8889,
+  user            : 'root',
+  password        : 'root',
+  database        : 'bamazon'
+});
+
+pool.query('SELECT', function (error, results, fields) {
+  if (error) {
+    throw error;
+  }
+
+  console.log('The solution is: ', results[0].solution);
+});
+
 // let arrOfData = [];
 // let arrOfData2 = [];
 function promptBuyer() {
@@ -112,6 +129,10 @@ function printTable(arr) {
     
   });
   
+}
+
+function fulfillOrder(key, qty) {
+
 }
 
 
