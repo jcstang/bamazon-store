@@ -37,30 +37,35 @@ function startupStore() {
   });
 
   connection.query("SELECT item_id, product_name, price FROM bamazon.products;",function(err, data, fields) {
-    console.log(err);
-    console.log(data);
-    console.log(fields);
-    console.log(fields[0].name);
+    if(err) {
+      throw err;
+    }
+
     
     
     let table = new Table({
       chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
-             , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
-             , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
-             , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
+      , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
+      , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
+      , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
     });
-     
+    
     table.push(
-        [fields[0].name, fields[1].name, fields[2].name]
-      , ['frob', 'bar', 'quuz']
+      [fields[0].name, fields[1].name, fields[2].name]
     );
-     
+      
+      data.forEach(element => {
+        table.push([element.item_id, element.product_name, element.price]);
+        
+      });
+
+
     console.log(table.toString());
     
     
   });
 
-
+  connection.end();
 }
 
 function startQuestions() {
