@@ -1,58 +1,82 @@
+require('dotenv').config();
 const inquirer = require('inquirer');
 const mysql = require('mysql');
 const chalk = require('chalk');
 const figlet = require('figlet');
 const keys = require('./keys');
+const Table = require('cli-table');
 
+// ===================================================
+// START
+// ===================================================
+startupStore();
 
-figlet('Welcome to bamazon!', function(err, data) {
-  if (err) {
-    throw err;
-  }
-  console.log(data);
-  
-});
+function startupStore() {
 
-let connection = mysql.createConnection({
-  host: keys.creds.hostName,
-  port: 8889,
-  user: keys.creds.userName,
-  password: keys.creds.password,
-  database: "bamazon"
-});
-connection.connect(function(err) {
-  if (err) throw err;
-  console.log("connected as id " + chalk.yellow(connection.threadId));
-  goGetData();
-});
-
-let pool  = mysql.createPool({
-  connectionLimit : 10,
-  host            : 'localhost',
-  port            : 8889,
-  user            : 'root',
-  password        : 'root',
-  database        : 'bamazon'
-});
-
-// pool.query('SELECT * FROM bamazon.products', function (error, results, fields) {
-//   if (error) {
-//     throw error;
-//   }
-//   console.log('the thing is: ', results);
-  
-//   // console.log('The solution is: ', results[0].solution);
-// });
-function fulfillOrder(key, qty) {
-  pool.query(`SELECT stock_quantity FROM bamazon.products WHERE item_id=${key}`, function(error, results, fields) {
-    if (error) {
-      throw error;
+  figlet('Welcome to bamazon!', function(err, data) {
+    if (err) {
+      throw err;
     }
-    console.log('the thing is: ', results);
+    console.log(data);
     
   });
   
+
+  let connection = mysql.createConnection({
+    host: keys.creds.hostName,
+    port: 8889,
+    user: keys.creds.userName,
+    password: keys.creds.password,
+    database: "bamazon"
+  });
+
+  connection.connect(function(err) {
+    if (err) throw err;
+    console.log("connected as id " + chalk.yellow(connection.threadId));
+    // goGetData();
+  });
+
+  connection.query("SELECT item_id, product_name, price FROM bamazon.products;",function(err, data, fields) {
+    console.log(err);
+    console.log(data);
+    console.log(fields);
+    console.log(fields[0].name);
+    
+    
+    let table = new Table({
+      chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
+             , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
+             , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
+             , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
+    });
+     
+    table.push(
+        [fields[0].name, fields[1].name, fields[2].name]
+      , ['frob', 'bar', 'quuz']
+    );
+     
+    console.log(table.toString());
+    
+    
+  });
+
+
 }
+
+function startQuestions() {
+  // ask want to start?
+}
+
+// function fulfillOrder(key, qty) {
+//   pool.query(`SELECT stock_quantity FROM bamazon.products WHERE item_id=${key}`, function(error, results, fields) {
+//     if (error) {
+//       throw error;
+//     }
+//     console.log('the thing is: ', results);
+    
+//   });
+  
+// }
 
 // let arrOfData = [];
 // let arrOfData2 = [];
