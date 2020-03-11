@@ -6,7 +6,7 @@ const figlet = require('figlet');
 const keys = require('./keys');
 const Table = require('cli-table');
 let connection;
-let dataStore;
+let storeTheStoreNew = [];
 
 // ===================================================
 // START
@@ -19,15 +19,15 @@ startupStore();
 // ===================================================
 function startupStore() {
 
-  
-  figlet('Welcome to bamazon!', function(err, data) {
-    if (err) {
-      throw err;
-    }
-    // welcome message
-    console.log(data);
+  // figlet('Welcome to bamazon!', function(err, data) {
+  //   if (err) {
+  //     throw err;
+  //   }
+  //   // welcome message
+  //   console.log(data);
     
-  });
+  // });
+  printFiglet('Welcome to bamazon!');
   
   connection = mysql.createConnection({
     host: keys.creds.hostName,
@@ -42,10 +42,42 @@ function startupStore() {
     console.log("connected as id " + chalk.yellow(connection.threadId));
   });
 
-  connection.query("SELECT item_id, product_name, price FROM bamazon.products;",function(err, data, fields) {
+  connection.query("SELECT item_id, product_name, price, department_name, stock_quantity FROM bamazon.products;",function(err, data, fields) {
     if(err) {
       throw err;
     }
+
+    // dataStore = data;
+    // console.log('datastore');
+    // console.log(dataStore);
+    // console.log(dataStore[0]);
+
+    // data.forEach(element => {
+    //   storeTheStore.push(element);
+    // });
+    storeTheStore = data;
+    // console.log('storeTheStore');
+    // console.log(storeTheStore);
+    storeTheStore.forEach(element => {
+      // console.log(`item_id: ${element.item_id} product: ${element.product_name}`);
+
+      let obj = {
+        id: element.item_id,
+        name: element.product_name,
+        price: element.price,
+        stock: element.stock_quantity,
+        deptName: element.department_name
+
+      }
+      storeTheStoreNew.push(obj);
+      
+    });
+    
+    // console.log('storeTheStoreNew');
+    // console.log(storeTheStoreNew);
+    
+    
+    
 
     printyPrint(data, fields);
     promptBuyer();
@@ -83,10 +115,12 @@ function promptBuyer() {
     // doesProductHaveEnough(answers.product_id, answers.product_quantity);
 
     if (hasStock(answers.product_id, answers.product_quantity)) {
-      console.log('hooray! nice purchase');
-      process.exit(0);
+      console.log(chalk.greenBright('hooray! nice purchase'));
+      // TODO: update DB
+      updateDB(answers.product_id, answers.product_quantity);
+      // process.exit(0);
     } else {
-      console.log('out of stock');
+      console.log(chalk.red('out of stock'));
       process.exit(1);
     }
 
@@ -96,58 +130,38 @@ function promptBuyer() {
   });
 
 }
+// UPDATE songs SET genre='Pop' WHERE id=2;
+function updateDB(key, orderAmt) {
+  console.log('updating DB......');
 
-function getDataPromise(key) {
-  // let qString = `SELECT * FROM bamazon.products WHERE item_id=${key}`
-  // connection.query(qString, (err, data, fields) => {
-  //   if (err) {
-  //     throw err;
-  //   }
-  // });
+  // TODO: update db
+  let queryString = `UPDATE bamazon.products SET stock_quantity=stock_quantity-${orderAmt} WHERE item_id=${key};`;
+  connection.query(queryString, function(err, data, fields) {
+    if(err){
+      throw err;
+    }
 
-  // let myFirstPromise = new Promise((resolve, reject) => {
-  //   // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
-  //   // In this example, we use setTimeout(...) to simulate async code. 
-  //   // In reality, you will probably be using something like XHR or an HTML5 API.
-  //   setTimeout( function() {
-  //     resolve("Success!");  // Yay! Everything went well!
-  //   }, 250) 
-  // }) 
-  
-  // return myFirstPromise.then((successMessage) => {
-  //   // successMessage is whatever we passed in the resolve(...) function above.
-  //   // It doesn't have to be a string, but if it is only a succeed message, it probably will be.
-  //   console.log("Yay! " + successMessage);
-  // });
-
+    console.log(chalk.greenBright('db UPDATED'));
+    process.exit(0);
+  });
 }
+
 
 function hasStock(key, amtAsking) {
   console.log('made it to hasStock');
-
-  // getDataPromise(key).then(function(res) {
-  //   console.log('promise fulfilled');
-    
-  // });
-  // getDataPromise(key).then(function(res) {
-  //   console.log('returned from getDataPromise');
-    
-  // });
   
-  let qString = `SELECT * FROM bamazon.products WHERE item_id=${key}`
-  connection.query(qString, function(err, data, fields) {
-    console.log(data);
-
-    console.log(`amtAsking: ${amtAsking} stock avail: ${data[0].stock_quantity}`);
+  let productArray = storeTheStoreNew.filter(function(product) {
+    // console.log(product);
     
-    
-    if(amtAsking > data[0].stock_quantity) {
-      return false;
-    }
-
+    return product.id === key;
   });
 
-  return true; 
+  console.log(`amtAsking: ${amtAsking} stock: ${productArray[0].stock}`);
+  if( amtAsking < productArray[0].stock) {
+    return true;
+  }
+
+  return false; 
 }
 
 
@@ -175,50 +189,25 @@ function printyPrint(data, fields) {
 
 function getRecordFromKey(key) {
 
-  let queryString = `SELECT item_id, product_name, price FROM bamazon.products WHERE item_id=${key}`;
-  connection.query(queryString,function(err, data, fields) {
-    if(err) {
-      throw err;
-    }
-    dataStore = data;
-    console.log('datastore');
-    console.log(data);
-    
-    
-    printyPrint(data, fields);
-
+  // TODO: filter to find specific id/key
+  let selectedProduct = storeTheStoreNew.filter(function(product){
+    return product.id === key
   });
+  console.log(selectedProduct);
+  
 
 }
 
-
-// function doesProductHaveEnough(key, quantity) {
-//   console.log('start of doesProductHaveEnough');
-  
-//   let queryString = `SELECT item_id, product_name, stock_quantity FROM bamazon.products WHERE item_id=${key};`;
-//   // console.log(queryString);
-  
-//   connection.query(queryString, function(err, data) {
-//     if (err) {
-//       throw err;
-//     }
-
-//     console.log(data);
-//     console.log(data[0].stock_quantity);
+function printFiglet(message) {
+  figlet(message, function(err, data) {
+    if (err) {
+      throw err;
+    }
+    // welcome message
+    console.log(data);
     
-//     if(quantity > data[0].stock_quantity) {
-//       console.log(chalk.red('there is not enough!!!!!!!!!!!!!!'));
-//       process.exit(1); 
-//     }
-//     fulfillOrder(data[0].item_id, data[0].stock_quantity);
-//     // console.log(data);
-//     // printTable(data);
-//     // process.exit(0);
-//     // return data;
-
-//     console.log('end of doesProductHaveEnough');
-//   });
-// }
+  });
+}
 
 
 
