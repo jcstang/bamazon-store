@@ -106,7 +106,6 @@ function promptBuyer() {
     getRecordFromKey(answers.product_id);
     if (hasStock(answers.product_id, answers.product_quantity)) {
       console.log(chalk.greenBright('hooray! nice purchase'));
-      // TODO: display how much they owe
       
       updateDB(answers.product_id, answers.product_quantity);
       updateLocalData();
@@ -137,10 +136,8 @@ function updateDB(key, orderAmt) {
 
 
 function hasStock(key, amtAsking) {
-  // console.log('made it to hasStock');
   
   let productArray = storeTheStoreNew.filter(function(product) {
-    // console.log(product);
     
     return product.id === key;
   });
