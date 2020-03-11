@@ -6,8 +6,6 @@ const figlet = require('figlet');
 const keys = require('./keys');
 const Table = require('cli-table');
 let connection;
-// let dataStore;
-// let storeTheStore = [];
 let storeTheStoreNew = [];
 
 // ===================================================
@@ -21,15 +19,15 @@ startupStore();
 // ===================================================
 function startupStore() {
 
-  
-  figlet('Welcome to bamazon!', function(err, data) {
-    if (err) {
-      throw err;
-    }
-    // welcome message
-    console.log(data);
+  // figlet('Welcome to bamazon!', function(err, data) {
+  //   if (err) {
+  //     throw err;
+  //   }
+  //   // welcome message
+  //   console.log(data);
     
-  });
+  // });
+  printFiglet('Welcome to bamazon!');
   
   connection = mysql.createConnection({
     host: keys.creds.hostName,
@@ -190,6 +188,17 @@ function getRecordFromKey(key) {
 
   });
 
+}
+
+function printFiglet(message) {
+  figlet(message, function(err, data) {
+    if (err) {
+      throw err;
+    }
+    // welcome message
+    console.log(data);
+    
+  });
 }
 
 
