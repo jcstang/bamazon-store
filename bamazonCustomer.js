@@ -115,10 +115,12 @@ function promptBuyer() {
     // doesProductHaveEnough(answers.product_id, answers.product_quantity);
 
     if (hasStock(answers.product_id, answers.product_quantity)) {
-      console.log('hooray! nice purchase');
+      console.log(chalk.greenBright('hooray! nice purchase'));
+      // TODO: update DB
+      updateDB(answers.product_id);
       process.exit(0);
     } else {
-      console.log('out of stock');
+      console.log(chalk.red('out of stock'));
       process.exit(1);
     }
 
@@ -128,25 +130,29 @@ function promptBuyer() {
   });
 
 }
+// UPDATE songs SET genre='Pop' WHERE id=2;
+function updateDB(key) {
+  console.log('updating DB......');
+  // TODO: update db
+  connection.quqery("UPDATE bamazon.products SET stock_quantity='' ");
+}
 
 
 function hasStock(key, amtAsking) {
   console.log('made it to hasStock');
   
-  let qString = `SELECT * FROM bamazon.products WHERE item_id=${key}`
-  connection.query(qString, function(err, data, fields) {
-    console.log(data);
-
-    console.log(`amtAsking: ${amtAsking} stock avail: ${data[0].stock_quantity}`);
+  let productArray = storeTheStoreNew.filter(function(product) {
+    // console.log(product);
     
-    
-    if(amtAsking > data[0].stock_quantity) {
-      return false;
-    }
-
+    return product.id === key;
   });
 
-  return true; 
+  console.log(`amtAsking: ${amtAsking} stock: ${productArray[0].stock}`);
+  if( amtAsking < productArray[0].stock) {
+    return true;
+  }
+
+  return false; 
 }
 
 
@@ -174,21 +180,12 @@ function printyPrint(data, fields) {
 
 function getRecordFromKey(key) {
 
-  let queryString = `SELECT item_id, product_name, price FROM bamazon.products WHERE item_id=${key}`;
-  connection.query(queryString,function(err, data, fields) {
-    if(err) {
-      throw err;
-    }
-    dataStore = data;
-    console.log('datastore');
-    console.log(data);
-    
-    
-    printyPrint(data, fields);
-
+  // TODO: filter to find specific id/key
+  let selectedProduct = storeTheStoreNew.filter(function(product){
+    return product.id === key
   });
-
-  storeTheStoreNew[]
+  console.log(selectedProduct);
+  
 
 }
 
