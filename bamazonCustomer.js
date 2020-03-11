@@ -12,6 +12,10 @@ let connection;
 // ===================================================
 startupStore();
 
+
+// ===================================================
+// functions
+// ===================================================
 function startupStore() {
 
   
@@ -35,7 +39,6 @@ function startupStore() {
   connection.connect(function(err) {
     if (err) throw err;
     console.log("connected as id " + chalk.yellow(connection.threadId));
-    // goGetData();
   });
 
   connection.query("SELECT item_id, product_name, price FROM bamazon.products;",function(err, data, fields) {
@@ -44,36 +47,15 @@ function startupStore() {
     }
 
     printyPrint(data, fields);
-
-    // let table = new Table({
-    //   chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
-    //   , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
-    //   , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
-    //   , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
-    // });
-    
-    // // add the column headers
-    // table.push(
-    //   [fields[0].name, fields[1].name, fields[2].name]
-    // );
-      
-    // data.forEach(element => {
-    //   table.push([element.item_id, element.product_name, element.price]);
-      
-    // });
-
-
-    // console.log(table.toString());
-    
     promptBuyer();
 
   });
 
-  // connection.end();
 }
 
 
 function promptBuyer() {
+
   inquirer.prompt([
     {
       type: 'number',
@@ -83,19 +65,53 @@ function promptBuyer() {
     {
       type: 'number',
       name: 'product_quantity',
-      message: 'how much do you want?'
+      message: 'how many do you want?'
     }
   ])
-      .then((answers) => {
-        getRecordFromKey(answers.product_id);
-        // doesProductHaveEnough(answers.product_id, answers.product_quantity);
+  .then((answers) => {
 
-      }).catch(error => {
-        console.log(error);
-        
-      });
+    connection.query("SELECT * FROM bamazon.products", function(err, data, fields){
+      if(err) {
+        throw err;
+      }
+
+
+    });
+
+    getRecordFromKey(answers.product_id);
+    // doesProductHaveEnough(answers.product_id, answers.product_quantity);
+
+    if (hasStock(answers.product_id, answers.product_quantity)) {
+      console.log('hooray! nice purchase');
+      process.exit(0);
+    } else {
+      console.log('out of stock');
+      process.exit(1);
+    }
+
+
+  }).catch(error => {
+    console.log(error);
+  });
 
 }
+
+function hasStock(key, amtAsking) {
+  console.log('made it to hasStock');
+  
+  let qString = `SELECT * FROM bamazon.products WHERE item_id=${key}`
+  connection.query(qString, function(err, data, fields) {
+    console.log(data);
+    
+    if(amtAsking > data[0].stock_quantity) {
+      return false;
+    }
+
+  });
+
+  return true; 
+}
+
 
 function printyPrint(data, fields) {
   let table = new Table({
@@ -122,7 +138,6 @@ function printyPrint(data, fields) {
 function getRecordFromKey(key) {
 
   let queryString = `SELECT item_id, product_name, price FROM bamazon.products WHERE item_id=${key}`;
-
   connection.query(queryString,function(err, data, fields) {
     if(err) {
       throw err;
@@ -130,24 +145,8 @@ function getRecordFromKey(key) {
 
     printyPrint(data, fields);
 
-    // let table = new Table({
-    //   chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
-    //   , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
-    //   , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
-    //   , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
-    // });
-
-    // // add the column headers
-    // table.push(
-    //   ['item_id', 'Product', 'price'],
-    //   [data[0].item_id, data[0].product_name, data[0].price]
-    // );
-    // console.log(table.toString());
-
-
   });
 
-  
 }
 
 
@@ -177,35 +176,6 @@ function getRecordFromKey(key) {
 
 //     console.log('end of doesProductHaveEnough');
 //   });
-// }
-
-
-// function goGetData() {
-//   let queryString = "SELECT item_id, product_name, department_name, price, stock_quantity FROM bamazon.products;"
-
-//   connection.query(queryString, function(err, res) {
-//     if (err) {
-//       throw err;
-//     }
-
-//     printTable(res);
-//     promptBuyer();
-    
-//     // connection.end();
-//   });
-
-// }
-
-
-// function printTable(arr) {
-//   console.log(`${chalk.red('item_id')} product_name ${chalk.bgYellow.black('department_name')} ${chalk.magenta('price')} ${chalk.greenBright('stock')}`);
-
-//   arr.forEach(el => {
-//     console.log(chalk.blue('------------------------------------------------------------------'));
-//     console.log(`${chalk.red(el.item_id)} ${el.product_name} ${chalk.bgYellow.black(el.department_name)} ${chalk.magenta(el.price)} ${chalk.greenBright(el.stock_quantity)}`);
-    
-//   });
-  
 // }
 
 
