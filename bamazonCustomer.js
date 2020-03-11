@@ -6,6 +6,7 @@ const figlet = require('figlet');
 const keys = require('./keys');
 const Table = require('cli-table');
 let connection;
+let dataStore;
 
 // ===================================================
 // START
@@ -124,10 +125,10 @@ function getDataPromise(key) {
 function hasStock(key, amtAsking) {
   console.log('made it to hasStock');
 
-  getDataPromise(key).then(function(res) {
-    console.log('promise fulfilled');
+  // getDataPromise(key).then(function(res) {
+  //   console.log('promise fulfilled');
     
-  });
+  // });
   // getDataPromise(key).then(function(res) {
   //   console.log('returned from getDataPromise');
     
@@ -136,6 +137,9 @@ function hasStock(key, amtAsking) {
   let qString = `SELECT * FROM bamazon.products WHERE item_id=${key}`
   connection.query(qString, function(err, data, fields) {
     console.log(data);
+
+    console.log(`amtAsking: ${amtAsking} stock avail: ${data[0].stock_quantity}`);
+    
     
     if(amtAsking > data[0].stock_quantity) {
       return false;
@@ -176,7 +180,11 @@ function getRecordFromKey(key) {
     if(err) {
       throw err;
     }
-
+    dataStore = data;
+    console.log('datastore');
+    console.log(data);
+    
+    
     printyPrint(data, fields);
 
   });
