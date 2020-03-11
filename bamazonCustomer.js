@@ -117,8 +117,8 @@ function promptBuyer() {
     if (hasStock(answers.product_id, answers.product_quantity)) {
       console.log(chalk.greenBright('hooray! nice purchase'));
       // TODO: update DB
-      updateDB(answers.product_id);
-      process.exit(0);
+      updateDB(answers.product_id, answers.product_quantity);
+      // process.exit(0);
     } else {
       console.log(chalk.red('out of stock'));
       process.exit(1);
@@ -131,10 +131,19 @@ function promptBuyer() {
 
 }
 // UPDATE songs SET genre='Pop' WHERE id=2;
-function updateDB(key) {
+function updateDB(key, orderAmt) {
   console.log('updating DB......');
+
   // TODO: update db
-  connection.quqery("UPDATE bamazon.products SET stock_quantity='' ");
+  let queryString = `UPDATE bamazon.products SET stock_quantity=stock_quantity-${orderAmt} WHERE item_id=${key};`;
+  connection.query(queryString, function(err, data, fields) {
+    if(err){
+      throw err;
+    }
+
+    console.log(chalk.greenBright('db UPDATED'));
+    process.exit(0);
+  });
 }
 
 
