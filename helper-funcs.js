@@ -61,24 +61,23 @@ function updateLocalData() {
       throw err;
     }
 
-    // store the query data locally
-    let storeTheStore = data;
-    storeTheStoreNew = [];
-    storeTheStore.forEach(element => {
-
+    storeTheStoreNew = data.map(function(product) {
       let obj = {
         id: element.item_id,
         name: element.product_name,
         price: element.price,
         stock: element.stock_quantity,
         deptName: element.department_name
+      };
 
-      }
-      storeTheStoreNew.push(obj);
-      
+      return obj;
     });
 
   });
+
+  console.log('ending connection...');
+  connection.end();
+  process.exit(0);
 }
 
 
@@ -98,14 +97,19 @@ function promptBuyer() {
   ])
   .then((answers) => {
 
+    if (answers.product_id === 88) {
+      // easter egg here
+      console.log(chalk.yellow('well done agent 007, Incoming mission brief...'));
+      
+      process.exit(1);
+    }
     getRecordFromKey(answers.product_id);
-
     if (hasStock(answers.product_id, answers.product_quantity)) {
       console.log(chalk.greenBright('hooray! nice purchase'));
-      // TODO: update DB
+      // TODO: display how much they owe
+      
       updateDB(answers.product_id, answers.product_quantity);
       updateLocalData();
-      // process.exit(0);
     } else {
       console.log(chalk.red(`Sorry, we are ${chalk.bgCyanBright('out of stock')} on that item.`));
       process.exit(1);
@@ -133,7 +137,7 @@ function updateDB(key, orderAmt) {
 
 
 function hasStock(key, amtAsking) {
-  console.log('made it to hasStock');
+  // console.log('made it to hasStock');
   
   let productArray = storeTheStoreNew.filter(function(product) {
     // console.log(product);
@@ -143,6 +147,7 @@ function hasStock(key, amtAsking) {
 
   console.log(`amtAsking: ${amtAsking} stock: ${productArray[0].stock}`);
   if( amtAsking < productArray[0].stock) {
+    console.log(chalk.magentaBright(`\nYou owe $${amtAsking * productArray[0].price}\n`));
     return true;
   }
 
@@ -173,14 +178,30 @@ function printyPrint(data, fields) {
 
 
 function getRecordFromKey(key) {
-
-  // TODO: filter to find specific id/key
   let selectedProduct = storeTheStoreNew.filter(function(product){
     return product.id === key
   });
-  console.log(selectedProduct);
-  
 
+
+  let table = new Table({
+    chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
+    , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
+    , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
+    , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
+  });
+
+  table.push(
+    ['id', 'product', 'price']
+  );
+  
+  selectedProduct.forEach(element => {
+    table.push([element.id, element.name, element.price]);
+    
+  });
+
+  //prints table
+  console.log(table.toString());
+  
 }
 
 function printFiglet(message) {
