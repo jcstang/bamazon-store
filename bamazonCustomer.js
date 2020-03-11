@@ -73,8 +73,8 @@ function startupStore() {
       
     });
     
-    console.log('storeTheStoreNew');
-    console.log(storeTheStoreNew);
+    // console.log('storeTheStoreNew');
+    // console.log(storeTheStoreNew);
     
     
     
@@ -187,6 +187,8 @@ function getRecordFromKey(key) {
     printyPrint(data, fields);
 
   });
+
+  storeTheStoreNew[]
 
 }
 
