@@ -61,24 +61,6 @@ function updateLocalData() {
       throw err;
     }
 
-    // // store the query data locally
-    // let storeTheStore = data;
-    // storeTheStoreNew = [];
-    // storeTheStore.forEach(element => {
-
-    //   let obj = {
-    //     id: element.item_id,
-    //     name: element.product_name,
-    //     price: element.price,
-    //     stock: element.stock_quantity,
-    //     deptName: element.department_name
-
-    //   }
-    //   storeTheStoreNew.push(obj);
-      
-    // });
-
-
     storeTheStoreNew = data.map(function(product) {
       let obj = {
         id: element.item_id,
