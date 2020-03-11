@@ -79,6 +79,10 @@ function updateLocalData() {
     });
 
   });
+
+  console.log('ending connection...');
+  connection.end();
+  process.exit(0);
 }
 
 
@@ -98,8 +102,13 @@ function promptBuyer() {
   ])
   .then((answers) => {
 
+    if (answers.product_id === 007) {
+      // easter egg here
+      console.log(chalk.yellow('well done agent 007, Incoming mission brief...'));
+      
+      process.exit(1);
+    }
     getRecordFromKey(answers.product_id);
-
     if (hasStock(answers.product_id, answers.product_quantity)) {
       console.log(chalk.greenBright('hooray! nice purchase'));
       // TODO: display how much they owe
@@ -133,7 +142,7 @@ function updateDB(key, orderAmt) {
 
 
 function hasStock(key, amtAsking) {
-  console.log('made it to hasStock');
+  // console.log('made it to hasStock');
   
   let productArray = storeTheStoreNew.filter(function(product) {
     // console.log(product);
@@ -143,7 +152,7 @@ function hasStock(key, amtAsking) {
 
   console.log(`amtAsking: ${amtAsking} stock: ${productArray[0].stock}`);
   if( amtAsking < productArray[0].stock) {
-    console.log(chalk.magentaBright(`with ${amtAsking} you owe ${amtAsking * productArray[0].price}`));
+    console.log(chalk.magentaBright(`\nYou owe $${amtAsking * productArray[0].price}\n`));
     return true;
   }
 

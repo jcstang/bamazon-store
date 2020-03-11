@@ -12,10 +12,6 @@ helper.startUpStore();
 // on exit
 // ===================================================
 process.on('exit', (code) => {
-  console.log(`About to exit with code: ${code}`);
-  console.log('ending connection...');
-  if(helper.connection) {
-    helper.connection.end();
-    printFiglet("Come again!");
-  }
+  console.log(`Ich gehe jetzt mit Code: ${code}`);
+  helper.printFiglet("Come again!");
 });
