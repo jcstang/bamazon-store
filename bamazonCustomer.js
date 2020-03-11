@@ -5,12 +5,12 @@ const chalk = require('chalk');
 const figlet = require('figlet');
 const keys = require('./keys');
 const Table = require('cli-table');
-let connection;
-let storeTheStoreNew = [];
 
 // ===================================================
 // START
 // ===================================================
+let connection;
+let storeTheStoreNew = [];
 startupStore();
 
 
@@ -19,14 +19,6 @@ startupStore();
 // ===================================================
 function startupStore() {
 
-  // figlet('Welcome to bamazon!', function(err, data) {
-  //   if (err) {
-  //     throw err;
-  //   }
-  //   // welcome message
-  //   console.log(data);
-    
-  // });
   printFiglet('Welcome to bamazon!');
   
   connection = mysql.createConnection({
@@ -47,19 +39,10 @@ function startupStore() {
       throw err;
     }
 
-    // dataStore = data;
-    // console.log('datastore');
-    // console.log(dataStore);
-    // console.log(dataStore[0]);
-
-    // data.forEach(element => {
-    //   storeTheStore.push(element);
-    // });
-    storeTheStore = data;
-    // console.log('storeTheStore');
-    // console.log(storeTheStore);
+    // store the query data locally
+    let storeTheStore = data;
+    storeTheStoreNew = [];
     storeTheStore.forEach(element => {
-      // console.log(`item_id: ${element.item_id} product: ${element.product_name}`);
 
       let obj = {
         id: element.item_id,
@@ -73,17 +56,37 @@ function startupStore() {
       
     });
     
-    // console.log('storeTheStoreNew');
-    // console.log(storeTheStoreNew);
-    
-    
-    
-
     printyPrint(data, fields);
     promptBuyer();
 
   });
 
+}
+
+function updateLocalData() {
+  connection.query("SELECT item_id, product_name, price, department_name, stock_quantity FROM bamazon.products;",function(err, data, fields) {
+    if(err) {
+      throw err;
+    }
+
+    // store the query data locally
+    let storeTheStore = data;
+    storeTheStoreNew = [];
+    storeTheStore.forEach(element => {
+
+      let obj = {
+        id: element.item_id,
+        name: element.product_name,
+        price: element.price,
+        stock: element.stock_quantity,
+        deptName: element.department_name
+
+      }
+      storeTheStoreNew.push(obj);
+      
+    });
+
+  });
 }
 
 
@@ -103,38 +106,28 @@ function promptBuyer() {
   ])
   .then((answers) => {
 
-    connection.query("SELECT * FROM bamazon.products", function(err, data, fields){
-      if(err) {
-        throw err;
-      }
-
-
-    });
-
     getRecordFromKey(answers.product_id);
-    // doesProductHaveEnough(answers.product_id, answers.product_quantity);
 
     if (hasStock(answers.product_id, answers.product_quantity)) {
       console.log(chalk.greenBright('hooray! nice purchase'));
       // TODO: update DB
       updateDB(answers.product_id, answers.product_quantity);
+      updateLocalData();
       // process.exit(0);
     } else {
-      console.log(chalk.red('out of stock'));
+      console.log(chalk.red(`Sorry, we are ${chalk.bgCyanBright('out of stock')} on that item.`));
       process.exit(1);
     }
-
 
   }).catch(error => {
     console.log(error);
   });
 
 }
-// UPDATE songs SET genre='Pop' WHERE id=2;
-function updateDB(key, orderAmt) {
-  console.log('updating DB......');
 
-  // TODO: update db
+
+function updateDB(key, orderAmt) {
+
   let queryString = `UPDATE bamazon.products SET stock_quantity=stock_quantity-${orderAmt} WHERE item_id=${key};`;
   connection.query(queryString, function(err, data, fields) {
     if(err){
@@ -219,12 +212,13 @@ process.on('exit', (code) => {
   console.log('ending connection...');
   if(connection) {
     connection.end();
-    figlet('Come again!', function(err, data) {
-      if (err) {
-        throw err;
-      }
-      console.log(data);
+    // figlet('Come again!', function(err, data) {
+    //   if (err) {
+    //     throw err;
+    //   }
+    //   console.log(data);
       
-    });
+    // });
+    printFiglet("Come again!");
   }
 });
