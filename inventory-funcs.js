@@ -30,6 +30,7 @@ function printFiglet(message) {
 }
 
 function promptUser() {
+
   inquirer
     .prompt([
       {
