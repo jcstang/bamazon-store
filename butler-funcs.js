@@ -7,6 +7,7 @@ const keys = require('./keys');
 const Table = require('cli-table');
 
 let storeTheStoreNew;
+let connection;
 
 // ===================================================
 // menu options
@@ -29,9 +30,11 @@ function addNewProduct() {
 function viewLowInventory() {
   console.log('viewLowInventory func');
 }
-// ====================================================
 
 
+// ===================================================
+// helper functions
+// ===================================================
 function displayTable() {
   console.log('here is the table');
   // getDatabaseData();
@@ -52,7 +55,7 @@ function printFiglet(message) {
 
 function hookUpToDB() {
   printFiglet('Welcome to bamazon!');
-  
+
   connection = mysql.createConnection({
     host: keys.creds.hostName,
     port: 8889,
@@ -67,49 +70,6 @@ function hookUpToDB() {
     // getDatabaseData();
     updateLocalData();
   });
-}
-
-function getDatabaseData() {
-  
-  // connection = mysql.createConnection({
-  //   host: keys.creds.hostName,
-  //   port: 8889,
-  //   user: keys.creds.userName,
-  //   password: keys.creds.password,
-  //   database: "bamazon"
-  // });
-
-  // connection.connect(function(err) {
-  //   if (err) throw err;
-  //   console.log("connected as id " + chalk.yellow(connection.threadId));
-  // });
-
-  // connection.query("SELECT item_id, product_name, price, department_name, stock_quantity FROM bamazon.products;",function(err, data, fields) {
-  //   if(err) {
-  //     throw err;
-  //   }
-
-  //   // store the query data locally
-  //   let storeTheStore = data;
-  //   storeTheStoreNew = [];
-  //   storeTheStore.forEach(element => {
-
-  //     let obj = {
-  //       id: element.item_id,
-  //       name: element.product_name,
-  //       price: element.price,
-  //       stock: element.stock_quantity,
-  //       deptName: element.department_name
-
-  //     }
-  //     storeTheStoreNew.push(obj);
-      
-  //   });
-    
-  //   printyPrint(data, fields);
-  //   // promptBuyer();
-
-  // });
 }
 
 function updateLocalData() {
@@ -133,6 +93,7 @@ function updateLocalData() {
     printyPrint(data, fields);
 
   });
+}
 
 function promptUserAboutPurchase() {
   inquirer.prompt([

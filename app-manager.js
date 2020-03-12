@@ -21,6 +21,9 @@ function promptUser() {
       switch (answers.mainChoice) {
         case 'View Products for Sale':
           butler.viewProducts();
+          // FIXME: data table is covering the next prompt.
+          // arrow keys will let it show up again but still
+          // a hidden menu.
           promptUser();
           break;
 
