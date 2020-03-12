@@ -24,22 +24,26 @@ function promptUser() {
           // FIXME: data table is covering the next prompt.
           // arrow keys will let it show up again but still
           // a hidden menu.
-          promptUser();
+          process.exit(0);
+          // promptUser();
           break;
 
         case 'View Low Inventory':
           butler.viewLowInventory();
-          promptUser();
+          process.exit(0);
+          // promptUser();
           break;
 
         case 'Add to Inventory':
           butler.addToInventory();
-          promptUser();
+          process.exit(0);
+          // promptUser();
           break;
 
         case 'Add New Product':
           butler.addNewProduct();
-          promptUser();
+          process.exit(0);
+          // promptUser();
           break;
 
         case 'exit':

@@ -28,6 +28,7 @@ hookUpToDB();
 // ===================================================
 function viewProducts() {
   console.log('viewProducts func');
+  printFiglet("Welcome!");
   // displayTable();
   
 
@@ -64,12 +65,14 @@ function viewProducts() {
     );
       
     data.forEach(element => {
-      table.push([element.id, element.name, element.price]);
+      table.push([element.item_id, element.product_name, element.price]);
       
     });
     
     // prints the table
     console.log(table.toString());
+    console.log('\n\n\n\n');
+    
 
     // printyPrint(data, fields);
     // jsonToTable(storeTheStoreNew);
