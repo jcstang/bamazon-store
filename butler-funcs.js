@@ -9,32 +9,59 @@ const Table = require('cli-table');
 let storeTheStoreNew;
 let connection;
 
+hookUpToDB();
+
+
 // ===================================================
 // menu options
 // ===================================================
 function viewProducts() {
   console.log('viewProducts func');
-  // helper.startUpStore();
   displayTable();
+}
+
+function viewLowInventory() {
+  console.log('viewLowInventory func');
+  updateLocalData();
+  // console.log(storeTheStoreNew);
+  // jsonToTable(storeTheStoreNew);
+  
 }
 
 function addToInventory() {
   console.log('addToInventory func');
+  displayTable();
 }
 
 function addNewProduct() {
   console.log('addNewProduct func');
 }
 
-// menu option
-function viewLowInventory() {
-  console.log('viewLowInventory func');
-}
 
 
 // ===================================================
 // helper functions
 // ===================================================
+function jsonToTable(array) {
+  let fields = [
+    {
+      name: 'item_id'
+    },
+    {
+      name: 'product_name'
+    },
+    {
+      name: 'price'
+    }
+  ];
+  // console.log(array);
+  
+  if (array !== undefined) {
+    printyPrint(array, fields);
+  }
+}
+
+
 function displayTable() {
   console.log('here is the table');
   // getDatabaseData();
@@ -54,7 +81,7 @@ function printFiglet(message) {
 }
 
 function hookUpToDB() {
-  printFiglet('Welcome to bamazon!');
+  // printFiglet('Welcome to bamazon!');
 
   connection = mysql.createConnection({
     host: keys.creds.hostName,
@@ -91,7 +118,8 @@ function updateLocalData() {
       return obj;
     });
 
-    printyPrint(data, fields);
+    // printyPrint(data, fields);
+    jsonToTable(storeTheStoreNew);
 
   });
 }
@@ -130,12 +158,13 @@ function printyPrint(data, fields) {
   );
     
   data.forEach(element => {
-    table.push([element.item_id, element.product_name, element.price]);
+    table.push([element.id, element.name, element.price]);
     
   });
-
-  //prints table
+  
   console.log(table.toString());
+  //prints table
+  // console.log(table.toString());
 }
 
 
