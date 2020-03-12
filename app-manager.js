@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-const butler = require('./butler-funcs');
+const butler = require('./butler-funcs.js');
 const chalk = require('chalk');
 
 function promptUser() {

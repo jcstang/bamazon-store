@@ -20,7 +20,15 @@ let theFields = [
   }
 ];
 
-hookUpToDB();
+// hookUpToDB();
+// connect to mysql
+// connection = mysql.createConnection({
+//   host: keys.creds.hostName,
+//   port: 8889,
+//   user: keys.creds.userName,
+//   password: keys.creds.password,
+//   database: "bamazon"
+// });
 
 
 // ===================================================
@@ -32,6 +40,8 @@ function viewProducts() {
   // displayTable();
   
 
+  console.log('1/6');
+  
   // connect to mysql
   connection = mysql.createConnection({
     host: keys.creds.hostName,
@@ -41,6 +51,9 @@ function viewProducts() {
     database: "bamazon"
   });
 
+  
+  console.log('2/6');
+  
   connection.connect(function(err) {
     if (err) throw err;
     console.log("connected as id " + chalk.yellow(connection.threadId));
@@ -49,11 +62,79 @@ function viewProducts() {
     // updateLocalData();
   });
 
+  console.log('3/6');
+
   connection.query("SELECT item_id, product_name, price, department_name, stock_quantity FROM bamazon.products;",function(err, data, fields) {
     if(err) {
       throw err;
     }
+    console.log('4/6');
+    
+    let table = new Table({
+      chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
+      , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
+      , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
+      , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
+    });
+    table.push(
+      [fields[0].name, fields[1].name, fields[2].name]
+    );
 
+    console.log(table);
+    
+    console.log('5/6');
+    
+    data.forEach(element => {
+      table.push([element.item_id, element.product_name, element.price]);
+      
+    });
+    
+    // prints the table
+    console.log(table.toString());
+    console.log('\n\n\n\n');
+    
+
+    // printyPrint(data, fields);
+    // jsonToTable(storeTheStoreNew);
+
+  });
+
+  console.log('6/6');
+  
+}
+
+// viewProducts();
+
+function viewLowInventory() {
+  console.log('viewLowInventory func');
+  // updateLocalData();
+  // printyPrint(storeTheStoreNew, theFields);
+  // console.log(storeTheStoreNew);
+  // jsonToTable(storeTheStoreNew);
+  
+  // mysql connect
+  // print table
+
+  let con2 = mysql.createConnection({
+    host: keys.creds.hostName,
+    port: 8889,
+    user: keys.creds.userName,
+    password: keys.creds.password,
+    database: "bamazon"
+  });
+
+  con2.connect(function(err) {
+    if (err) throw err;
+    console.log("connected as id " + chalk.yellow(con2.threadId));
+  });
+  console.log('between connect and query');
+  
+  con2.query('SELECT * FROM bamazon.products WHERE stock_quantity < 8;', function(err, data, fields) {
+    if(err) {
+      throw err;
+    }
+    console.log('inside query con2');
+    
     let table = new Table({
       chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
       , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
@@ -72,22 +153,9 @@ function viewProducts() {
     // prints the table
     console.log(table.toString());
     console.log('\n\n\n\n');
-    
-
-    // printyPrint(data, fields);
-    // jsonToTable(storeTheStoreNew);
 
   });
 
-
-}
-
-function viewLowInventory() {
-  console.log('viewLowInventory func');
-  updateLocalData();
-  printyPrint(storeTheStoreNew, theFields);
-  // console.log(storeTheStoreNew);
-  // jsonToTable(storeTheStoreNew);
   
 }
 
@@ -108,15 +176,6 @@ function addNewProduct() {
 // ===================================================
 // helper functions
 // ===================================================
-function jsonToTable(array) {
-  
-  // console.log(array);
-  
-  if (array !== undefined) {
-    printyPrint(array, fields);
-  }
-}
-
 
 function displayTable() {
   console.log('here is the table');

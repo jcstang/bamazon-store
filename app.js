@@ -24,6 +24,8 @@ function mainMenu() {
     }
   ])
   .then(answers => {
+    console.log(answers);
+    
     switch (answers.forkChoice) {
       case 'See Manager View':
         mananger.promptUser();
