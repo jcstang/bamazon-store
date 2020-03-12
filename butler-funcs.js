@@ -68,6 +68,7 @@ function hookUpToDB() {
     if (err) throw err;
     console.log("connected as id " + chalk.yellow(connection.threadId));
     // getDatabaseData();
+    // updateLocalData();
     updateLocalData();
   });
 }
