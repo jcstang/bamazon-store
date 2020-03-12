@@ -4,33 +4,43 @@ const chalk = require('chalk');
 
 function promptUser() {
   console.log('Hi, manager view here');
+  // butler.printFiglet('Hello, Manager!');
+
   inquirer.prompt([
     {
       type: 'list',
       name: 'mainChoice',
-      message: chalk.magentaBright.bold('What would you like to do today?'),
+      message: chalk.magentaBright.bold('Hello Manager! What would you like to do?'),
       choices: ['View Products for Sale', 'View Low Inventory', 'Add to Inventory', 'Add New Product', 'exit']
     }
   ])
     .then(answers => {
-      butler.displayTable();
-      // TODO: decide which guess
+      // butler.displayTable();
       // TODO: under each answer, create function to handle logic
 
       switch (answers.mainChoice) {
         case 'View Products for Sale':
+          butler.viewProducts();
+          promptUser();
           break;
 
         case 'View Low Inventory':
+          butler.viewLowInventory();
+          promptUser();
           break;
 
         case 'Add to Inventory':
+          butler.addToInventory();
+          promptUser();
           break;
 
         case 'Add New Product':
+          butler.addNewProduct();
+          promptUser();
           break;
 
         case 'exit':
+          process.exit(0);
           break;
 
         default:
