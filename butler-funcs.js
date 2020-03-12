@@ -8,6 +8,17 @@ const Table = require('cli-table');
 
 let storeTheStoreNew;
 let connection;
+let theFields = [
+  {
+    name: 'item_id'
+  },
+  {
+    name: 'product_name'
+  },
+  {
+    name: 'price'
+  }
+];
 
 hookUpToDB();
 
@@ -23,6 +34,7 @@ function viewProducts() {
 function viewLowInventory() {
   console.log('viewLowInventory func');
   updateLocalData();
+  printyPrint(storeTheStoreNew, theFields);
   // console.log(storeTheStoreNew);
   // jsonToTable(storeTheStoreNew);
   
@@ -43,17 +55,7 @@ function addNewProduct() {
 // helper functions
 // ===================================================
 function jsonToTable(array) {
-  let fields = [
-    {
-      name: 'item_id'
-    },
-    {
-      name: 'product_name'
-    },
-    {
-      name: 'price'
-    }
-  ];
+  
   // console.log(array);
   
   if (array !== undefined) {
@@ -66,6 +68,7 @@ function displayTable() {
   console.log('here is the table');
   // getDatabaseData();
   hookUpToDB();
+  printyPrint(storeTheStoreNew, theFields);
 }
 
 function printFiglet(message) {
@@ -119,7 +122,7 @@ function updateLocalData() {
     });
 
     // printyPrint(data, fields);
-    jsonToTable(storeTheStoreNew);
+    // jsonToTable(storeTheStoreNew);
 
   });
 }
