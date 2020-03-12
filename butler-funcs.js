@@ -28,7 +28,55 @@ hookUpToDB();
 // ===================================================
 function viewProducts() {
   console.log('viewProducts func');
-  displayTable();
+  // displayTable();
+  
+
+  // connect to mysql
+  connection = mysql.createConnection({
+    host: keys.creds.hostName,
+    port: 8889,
+    user: keys.creds.userName,
+    password: keys.creds.password,
+    database: "bamazon"
+  });
+
+  connection.connect(function(err) {
+    if (err) throw err;
+    console.log("connected as id " + chalk.yellow(connection.threadId));
+    // getDatabaseData();
+    // updateLocalData();
+    // updateLocalData();
+  });
+
+  connection.query("SELECT item_id, product_name, price, department_name, stock_quantity FROM bamazon.products;",function(err, data, fields) {
+    if(err) {
+      throw err;
+    }
+
+    let table = new Table({
+      chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
+      , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
+      , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
+      , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
+    });
+    table.push(
+      [fields[0].name, fields[1].name, fields[2].name]
+    );
+      
+    data.forEach(element => {
+      table.push([element.id, element.name, element.price]);
+      
+    });
+    
+    // prints the table
+    console.log(table.toString());
+
+    // printyPrint(data, fields);
+    // jsonToTable(storeTheStoreNew);
+
+  });
+
+
 }
 
 function viewLowInventory() {
@@ -48,6 +96,9 @@ function addToInventory() {
 function addNewProduct() {
   console.log('addNewProduct func');
 }
+
+
+
 
 
 
