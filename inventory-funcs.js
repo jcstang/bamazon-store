@@ -1,9 +1,11 @@
 let figlet = require('figlet');
 let inquirer = require('inquirer');
 let chalk = require('chalk');
+let helper = require('./helper-funcs');
 
 function viewProducts() {
   console.log('viewProducts func');
+  helper.startUpStore();
 }
 
 function viewLowInventory() {
