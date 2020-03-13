@@ -107,10 +107,6 @@ function viewProducts() {
 
 function viewLowInventory() {
   console.log('viewLowInventory func');
-  // updateLocalData();
-  // printyPrint(storeTheStoreNew, theFields);
-  // console.log(storeTheStoreNew);
-  // jsonToTable(storeTheStoreNew);
   
   // mysql connect
   // print table
