@@ -31,7 +31,7 @@ function startupStore() {
       throw err;
     }
 
-    // store the query data locally
+    // store the query data locallycle
     let storeTheStore = data;
     storeTheStoreNew = [];
     storeTheStore.forEach(element => {
