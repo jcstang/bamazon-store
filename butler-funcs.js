@@ -40,6 +40,8 @@ function viewProducts() {
   // displayTable();
   
 
+  // FIXME: agh!!!
+
   console.log('1/6');
   
   // connect to mysql
@@ -80,6 +82,9 @@ function viewProducts() {
       [fields[0].name, fields[1].name, fields[2].name]
     );
 
+
+    // TODO: missing table.push rows of data
+
     console.log(table);
     
     console.log('5/6');
@@ -96,7 +101,7 @@ function viewProducts() {
 
     // printyPrint(data, fields);
     // jsonToTable(storeTheStoreNew);
-
+    // return table;
   });
 
   console.log('6/6');

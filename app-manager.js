@@ -24,7 +24,10 @@ function promptUser() {
           // FIXME: data table is covering the next prompt.
           // arrow keys will let it show up again but still
           // a hidden menu.
-          process.exit(0);
+          setTimeout(() => {
+            process.exit(0);
+          }, 10 * 1000);
+          // process.exit(0);
           // promptUser();
           break;
 
