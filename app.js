@@ -52,7 +52,9 @@ function mainMenu() {
 // on exit
 // ===================================================
 process.on('exit', (code) => {
-  console.log(`Ich gehe jetzt mit Code: ${code}`);
+  // console.log(`Ich gehe jetzt mit Code: ${code}`);
+  console.log(`Ausfahrt ${code}`);
+  
 });
 
 
