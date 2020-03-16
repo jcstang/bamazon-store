@@ -47,7 +47,7 @@ function viewProducts() {
   // connect to mysql
   connection = mysql.createConnection({
     host: keys.creds.hostName,
-    port: 8889,
+    port: 8819,
     user: keys.creds.userName,
     password: keys.creds.password,
     database: "bamazon"
@@ -202,7 +202,7 @@ function hookUpToDB() {
 
   connection = mysql.createConnection({
     host: keys.creds.hostName,
-    port: 8889,
+    port: 8819,
     user: keys.creds.userName,
     password: keys.creds.password,
     database: "bamazon"
